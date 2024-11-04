@@ -266,6 +266,12 @@ func (conR *Reactor) Receive(e p2p.Envelope) {
 				conR.Switch.StopPeerForError(e.Src, err)
 				return
 			}
+			conR.Logger.Info("NewRoundStep",
+				"step", msg.Step,
+				"elapsed", msg.SecondsSinceStartTime,
+				"height", msg.Height,
+				"round", msg.Round,
+			)
 			ps.ApplyNewRoundStepMessage(msg)
 		case *NewValidBlockMessage:
 			ps.ApplyNewValidBlockMessage(msg)
@@ -321,6 +327,11 @@ func (conR *Reactor) Receive(e p2p.Envelope) {
 		switch msg := msg.(type) {
 		case *ProposalMessage:
 			ps.SetHasProposal(msg.Proposal)
+			conR.Logger.Info("Proposal",
+				"time", msg.Proposal.Timestamp,
+				"height", msg.Proposal.Height,
+				"round", msg.Proposal.Round,
+			)
 			conR.conS.peerMsgQueue <- msgInfo{msg, e.Src.ID()}
 		case *ProposalPOLMessage:
 			ps.ApplyProposalPOLMessage(msg)
@@ -346,6 +357,12 @@ func (conR *Reactor) Receive(e p2p.Envelope) {
 			ps.EnsureVoteBitArrays(height, valSize)
 			ps.EnsureVoteBitArrays(height-1, lastCommitSize)
 			ps.SetHasVote(msg.Vote)
+			conR.Logger.Info("Vote",
+				"time", msg.Vote.Timestamp,
+				"height", msg.Vote.Height,
+				"round", msg.Vote.Round,
+				"valaddr", msg.Vote.ValidatorAddress.String(),
+			)
 
 			cs.peerMsgQueue <- msgInfo{msg, e.Src.ID()}
 
