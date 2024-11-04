@@ -328,7 +328,7 @@ func (conR *Reactor) Receive(e p2p.Envelope) {
 		case *ProposalMessage:
 			ps.SetHasProposal(msg.Proposal)
 			conR.Logger.Info("Proposal",
-				"time", msg.Proposal.Timestamp,
+				"time", msg.Proposal.Timestamp.Format("2006-01-02 15:04:05.1234"),
 				"height", msg.Proposal.Height,
 				"round", msg.Proposal.Round,
 			)
@@ -358,7 +358,7 @@ func (conR *Reactor) Receive(e p2p.Envelope) {
 			ps.EnsureVoteBitArrays(height-1, lastCommitSize)
 			ps.SetHasVote(msg.Vote)
 			conR.Logger.Info("Vote",
-				"time", msg.Vote.Timestamp,
+				"time", msg.Vote.Timestamp.Format("2006-01-02 15:04:05.1234"),
 				"height", msg.Vote.Height,
 				"round", msg.Vote.Round,
 				"valaddr", msg.Vote.ValidatorAddress.String(),
